@@ -15,7 +15,7 @@ public abstract class OnSlideListener {
     public void onSlideChanged(int from, int to) {
     }
 
-    public void onSlideInit(int position, @Nullable TextView title, @NonNull ImageView image,
+    public void onSlideInit(int position, @NonNull ImageView image,
                             @Nullable TextView description) {
     }
 }

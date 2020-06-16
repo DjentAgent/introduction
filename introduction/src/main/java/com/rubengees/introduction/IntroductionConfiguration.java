@@ -19,86 +19,85 @@ import com.rubengees.introduction.interfaces.OnSlideListener;
  */
 final class IntroductionConfiguration {
 
-    private static IntroductionConfiguration INSTANCE;
+	private static IntroductionConfiguration INSTANCE;
 
-    private OnSlideListener onSlideListener;
-    private ViewPager.PageTransformer pageTransformer;
-    private IndicatorManager indicatorManager;
-    private Typeface titleTypeface;
-    private Typeface descriptionTypeface;
+	private OnSlideListener onSlideListener;
+	private ViewPager.PageTransformer pageTransformer;
+	private IndicatorManager indicatorManager;
+	private Typeface titleTypeface;
+	private Typeface descriptionTypeface;
 
-    private IntroductionConfiguration() {
-    }
+	private IntroductionConfiguration() {
+	}
 
-    @NonNull
-    synchronized static IntroductionConfiguration getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new IntroductionConfiguration();
-        }
+	@NonNull
+	synchronized static IntroductionConfiguration getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new IntroductionConfiguration();
+		}
 
-        return INSTANCE;
-    }
+		return INSTANCE;
+	}
 
-    synchronized static void destroy() {
-        if (INSTANCE != null) {
-            INSTANCE.onSlideListener = null;
-            INSTANCE.pageTransformer = null;
-            INSTANCE.indicatorManager = null;
+	synchronized static void destroy() {
+		if (INSTANCE != null) {
+			INSTANCE.onSlideListener = null;
+			INSTANCE.pageTransformer = null;
+			INSTANCE.indicatorManager = null;
 
-            INSTANCE = null;
-        }
-    }
+			INSTANCE = null;
+		}
+	}
 
-    void setOnSlideChangedListener(@Nullable OnSlideListener onSlideChangedListener) {
-        this.onSlideListener = onSlideChangedListener;
-    }
+	void setOnSlideChangedListener(@Nullable OnSlideListener onSlideChangedListener) {
+		this.onSlideListener = onSlideChangedListener;
+	}
 
-    @Nullable
-    ViewPager.PageTransformer getPageTransformer() {
-        return pageTransformer;
-    }
+	@Nullable
+	ViewPager.PageTransformer getPageTransformer() {
+		return pageTransformer;
+	}
 
-    void setPageTransformer(@Nullable ViewPager.PageTransformer pageTransformer) {
-        this.pageTransformer = pageTransformer;
-    }
+	void setPageTransformer(@Nullable ViewPager.PageTransformer pageTransformer) {
+		this.pageTransformer = pageTransformer;
+	}
 
-    @Nullable
-    IndicatorManager getIndicatorManager() {
-        return indicatorManager;
-    }
+	@Nullable
+	IndicatorManager getIndicatorManager() {
+		return indicatorManager;
+	}
 
-    void setIndicatorManager(@Nullable IndicatorManager indicatorManager) {
-        this.indicatorManager = indicatorManager;
-    }
+	void setIndicatorManager(@Nullable IndicatorManager indicatorManager) {
+		this.indicatorManager = indicatorManager;
+	}
 
-    void callOnSlideChanged(@IntRange(from = 0) int from, @IntRange(from = 0) int to) {
-        if (onSlideListener != null) {
-            onSlideListener.onSlideChanged(from, to);
-        }
-    }
+	void callOnSlideChanged(@IntRange(from = 0) int from, @IntRange(from = 0) int to) {
+		if (onSlideListener != null) {
+			onSlideListener.onSlideChanged(from, to);
+		}
+	}
 
-    void callOnSlideInit(@IntRange(from = 0) int position, @Nullable TextView title,
-                         @NonNull ImageView image, @Nullable TextView description) {
-        if (onSlideListener != null) {
-            onSlideListener.onSlideInit(position, title, image, description);
-        }
-    }
+	void callOnSlideInit(@IntRange(from = 0) int position, @NonNull ImageView image, @Nullable TextView description) {
+		if (onSlideListener != null) {
+			onSlideListener.onSlideInit(position, image, description);
+		}
+	}
 
-    @Nullable
-    Typeface getTitleTypeface() {
-        return titleTypeface;
-    }
+	@Nullable
+	Typeface getTitleTypeface() {
+		return titleTypeface;
+	}
 
-    void setTitleTypeface(Typeface typeface) {
-        this.titleTypeface = typeface;
-    }
+	void setTitleTypeface(Typeface typeface) {
+		this.titleTypeface = typeface;
+	}
 
-    @Nullable
-    Typeface getDescriptionTypeface() {
-        return descriptionTypeface;
-    }
+	@Nullable
+	Typeface getDescriptionTypeface() {
+		return descriptionTypeface;
+	}
 
-    void setDescriptionTypeface(Typeface typeface) {
-        this.descriptionTypeface = typeface;
-    }
+	void setDescriptionTypeface(Typeface typeface) {
+		this.descriptionTypeface = typeface;
+	}
 }

@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final OnSlideListener DEFAULT_ON_SLIDE_LISTENER = new OnSlideListener() {
         @Override
-        public void onSlideInit(int position, @Nullable TextView title, @NonNull ImageView image,
+        public void onSlideInit(int position, @NonNull ImageView image,
                                 @Nullable TextView description) {
             if (position % 3 == 1) {
                 Glide.with(image.getContext())
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSlideInit(int position, @Nullable TextView title, @NonNull ImageView image,
+            public void onSlideInit(int position, @NonNull ImageView image,
                                     @Nullable TextView description) {
                 if (position == 2) {
                     Glide.with(image.getContext())
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
                 .withSlides(slides)
                 .withOnSlideListener(new OnSlideListener() {
                     @Override
-                    public void onSlideInit(int position, @Nullable TextView title, @NonNull ImageView image,
+                    public void onSlideInit(int position, @NonNull ImageView image,
                                             @Nullable TextView description) {
                         if (position == 1) {
                             Glide.with(image.getContext())
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                 ))
                 .withOnSlideListener(new OnSlideListener() {
                     @Override
-                    public void onSlideInit(int position, @Nullable TextView title, @NonNull ImageView image,
+                    public void onSlideInit(int position, @NonNull ImageView image,
                                             @Nullable TextView description) {
                         Glide.with(image.getContext())
                                 .load(R.drawable.image3)

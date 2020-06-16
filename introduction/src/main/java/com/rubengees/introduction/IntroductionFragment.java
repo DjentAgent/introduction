@@ -30,166 +30,152 @@ import static android.view.View.GONE;
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public class IntroductionFragment extends Fragment {
 
-    private static final String BUNDLE_SLIDE = "introduction_slide";
+	private static final String BUNDLE_SLIDE = "introduction_slide";
 
-    private Slide slide;
-    private View root;
+	private Slide slide;
+	private View root;
 
-    public static IntroductionFragment newInstance(@NonNull Slide slide) {
-        IntroductionFragment fragment = new IntroductionFragment();
-        Bundle args = new Bundle();
+	public static IntroductionFragment newInstance(@NonNull Slide slide) {
+		IntroductionFragment fragment = new IntroductionFragment();
+		Bundle args = new Bundle();
 
-        args.putParcelable(BUNDLE_SLIDE, slide);
-        fragment.setArguments(args);
+		args.putParcelable(BUNDLE_SLIDE, slide);
+		fragment.setArguments(args);
 
-        return fragment;
-    }
+		return fragment;
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        this.slide = getSafeArguments().getParcelable(BUNDLE_SLIDE);
-    }
+		this.slide = getSafeArguments().getParcelable(BUNDLE_SLIDE);
+	}
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        root = initViews(inflater, container);
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		root = initViews(inflater, container);
 
-        getIntroductionActivity().getStyle().applyStyleOnFragmentView(this, root);
+		getIntroductionActivity().getStyle().applyStyleOnFragmentView(this, root);
 
-        return root;
-    }
+		return root;
+	}
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 
-        ViewCompat.requestApplyInsets(root);
-    }
+		ViewCompat.requestApplyInsets(root);
+	}
 
-    @NonNull
-    private View initViews(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.introduction_fragment, container, false);
-        ViewGroup contentContainer = root.findViewById(R.id.introduction_fragment_content_container);
+	@NonNull
+	private View initViews(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.introduction_fragment, container, false);
+		ViewGroup contentContainer = root.findViewById(R.id.introduction_fragment_content_container);
 
-        if (slide.getCustomViewBuilder() == null) {
-            contentContainer.addView(initDefaultViews(inflater, container));
-        } else {
-            contentContainer.addView(slide.getCustomViewBuilder().buildView(inflater, container));
-        }
+		if (slide.getCustomViewBuilder() == null) {
+			contentContainer.addView(initDefaultViews(inflater, container));
+		} else {
+			contentContainer.addView(slide.getCustomViewBuilder().buildView(inflater, container));
+		}
 
-        root.setBackgroundColor(slide.getColor());
-        root.setTag(slide.getPosition());
+		root.setBackgroundColor(slide.getColor());
+		root.setTag(slide.getPosition());
 
-        return root;
-    }
+		return root;
+	}
 
-    @NonNull
-    private View initDefaultViews(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.introduction_fragment_content, container, false);
-        ViewGroup descriptionContainer = root.findViewById(R.id.introduction_fragment_content_description_container);
+	@NonNull
+	private View initDefaultViews(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+		ViewGroup root = (ViewGroup) inflater.inflate(R.layout.introduction_fragment_content, container, false);
+		ViewGroup descriptionContainer = root.findViewById(R.id.introduction_fragment_content_description_container);
 
-        TextView title = root.findViewById(R.id.introduction_fragment_content_title);
-        ImageView image = root.findViewById(R.id.introduction_fragment_content_image);
-        TextView description = null;
+		ImageView image = root.findViewById(R.id.introduction_fragment_content_image);
+		TextView description = null;
 
-        if (slide.getTitle() != null) {
-            title.setText(slide.getTitle());
-            title.setMaxLines(getLineCountForTitle());
-            title.setTypeface(IntroductionConfiguration.getInstance().getTitleTypeface());
+		if (slide.getDescription() == null && slide.getOption() != null) {
+			ColorStateList buttonColors = ContextCompat.getColorStateList(getSafeContext(), android.R.color.white);
+			CheckBox option = (CheckBox) inflater.inflate(R.layout.introduction_fragment_option,
+					descriptionContainer, false);
 
-            if (slide.getTitleSize() != null) {
-                title.setTextSize(COMPLEX_UNIT_DIP, slide.getTitleSize());
-            }
-        } else {
-            title.setVisibility(GONE);
-            title = null;
-        }
+			option.setText(slide.getOption().getTitle());
+			option.setChecked(slide.getOption().isActivated());
+			option.setOnCheckedChangeListener((buttonView, isChecked) -> slide.getOption().setActivated(isChecked));
 
-        if (slide.getDescription() == null && slide.getOption() != null) {
-            ColorStateList buttonColors = ContextCompat.getColorStateList(getSafeContext(), android.R.color.white);
-            CheckBox option = (CheckBox) inflater.inflate(R.layout.introduction_fragment_option,
-                    descriptionContainer, false);
+			CompoundButtonCompat.setButtonTintList(option, buttonColors);
 
-            option.setText(slide.getOption().getTitle());
-            option.setChecked(slide.getOption().isActivated());
-            option.setOnCheckedChangeListener((buttonView, isChecked) -> slide.getOption().setActivated(isChecked));
+			descriptionContainer.addView(option);
+			description = option;
+		} else if (slide.getDescription() != null) {
+			description = (TextView) inflater.inflate(R.layout.introduction_fragment_description,
+					descriptionContainer, false);
 
-            CompoundButtonCompat.setButtonTintList(option, buttonColors);
+			description.setText(slide.getDescription());
+			descriptionContainer.addView(description);
+		} else {
+			descriptionContainer.setVisibility(GONE);
+		}
 
-            descriptionContainer.addView(option);
-            description = option;
-        } else if (slide.getDescription() != null) {
-            description = (TextView) inflater.inflate(R.layout.introduction_fragment_description,
-                    descriptionContainer, false);
+		if (description != null) {
+			description.setMaxLines(getLineCountForDescription());
+			description.setTypeface(IntroductionConfiguration.getInstance().getDescriptionTypeface());
 
-            description.setText(slide.getDescription());
-            descriptionContainer.addView(description);
-        } else {
-            descriptionContainer.setVisibility(GONE);
-        }
+			if (slide.getDescriptionSize() != null) {
+				description.setTextSize(COMPLEX_UNIT_DIP, slide.getDescriptionSize());
+			}
+		}
 
-        if (description != null) {
-            description.setMaxLines(getLineCountForDescription());
-            description.setTypeface(IntroductionConfiguration.getInstance().getDescriptionTypeface());
+		if (slide.getImageResource() != null) {
+			image.setImageResource(slide.getImageResource());
+		}
 
-            if (slide.getDescriptionSize() != null) {
-                description.setTextSize(COMPLEX_UNIT_DIP, slide.getDescriptionSize());
-            }
-        }
+		IntroductionConfiguration.getInstance().callOnSlideInit(slide.getPosition(), image, description);
 
-        if (slide.getImageResource() != null) {
-            image.setImageResource(slide.getImageResource());
-        }
+		return root;
+	}
 
-        IntroductionConfiguration.getInstance().callOnSlideInit(slide.getPosition(), title, image, description);
+	private int getLineCountForTitle() {
+		return getSafeActivity().getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE ? 2 : 3;
+	}
 
-        return root;
-    }
+	private int getLineCountForDescription() {
+		return getSafeActivity().getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE ? 2 : 4;
+	}
 
-    private int getLineCountForTitle() {
-        return getSafeActivity().getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE ? 2 : 3;
-    }
+	public IntroductionActivity getIntroductionActivity() {
+		return (IntroductionActivity) getActivity();
+	}
 
-    private int getLineCountForDescription() {
-        return getSafeActivity().getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE ? 2 : 4;
-    }
+	@NonNull
+	private Bundle getSafeArguments() {
+		Bundle result = getArguments();
 
-    public IntroductionActivity getIntroductionActivity() {
-        return (IntroductionActivity) getActivity();
-    }
+		if (result == null) {
+			throw new AssertionError("context is null");
+		}
 
-    @NonNull
-    private Bundle getSafeArguments() {
-        Bundle result = getArguments();
+		return result;
+	}
 
-        if (result == null) {
-            throw new AssertionError("context is null");
-        }
+	@NonNull
+	private Context getSafeContext() {
+		Context result = getContext();
 
-        return result;
-    }
+		if (result == null) {
+			throw new AssertionError("context is null");
+		}
 
-    @NonNull
-    private Context getSafeContext() {
-        Context result = getContext();
+		return result;
+	}
 
-        if (result == null) {
-            throw new AssertionError("context is null");
-        }
+	@NonNull
+	private Context getSafeActivity() {
+		Activity result = getActivity();
 
-        return result;
-    }
+		if (result == null) {
+			throw new AssertionError("activity is null");
+		}
 
-    @NonNull
-    private Context getSafeActivity() {
-        Activity result = getActivity();
-
-        if (result == null) {
-            throw new AssertionError("activity is null");
-        }
-
-        return result;
-    }
+		return result;
+	}
 }
