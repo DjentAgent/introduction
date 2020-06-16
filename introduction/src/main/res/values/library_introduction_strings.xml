@@ -8,7 +8,7 @@
     <string name="library_introduction_libraryName" tools:ignore="UnusedResources">Introduction</string>
     <string name="library_introduction_libraryDescription" tools:ignore="UnusedResources">Show a beautiful Intro to your users with ease.</string>
     <string name="library_introduction_libraryWebsite" tools:ignore="UnusedResources">https://github.com/rubengees/Introduction</string>
-    <string name="library_introduction_libraryVersion" tools:ignore="UnusedResources">2.0.0</string>
+    <string name="library_introduction_libraryVersion" tools:ignore="UnusedResources">2.0.1</string>
     <!-- OpenSource section -->
     <string name="library_introduction_isOpenSource" tools:ignore="UnusedResources">true</string>
     <string name="library_introduction_repositoryLink" tools:ignore="UnusedResources">https://github.com/rubengees/Introduction</string>
