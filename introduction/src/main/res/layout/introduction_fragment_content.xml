@@ -12,9 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_weight="10"
+        android:layout_weight="15"
         android:gravity="center"
-        android:scaleType="fitXY"
         tools:ignore="ContentDescription"
         tools:src="@tools:sample/backgrounds/scenic" />
 
@@ -23,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_weight="90"
+        android:layout_weight="85"
         android:foregroundGravity="center"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
