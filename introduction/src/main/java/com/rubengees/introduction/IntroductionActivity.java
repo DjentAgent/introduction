@@ -22,6 +22,7 @@ import com.rubengees.introduction.interfaces.IndicatorManager;
 import com.rubengees.introduction.style.Style;
 import com.rubengees.introduction.util.ButtonManager;
 import com.rubengees.introduction.util.OrientationUtils;
+import com.rubengees.introduction.view.SmoothViewPager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +54,7 @@ public class IntroductionActivity extends AppCompatActivity {
     private Style style;
 
     private ViewGroup root;
-    private ViewPager pager;
+    private SmoothViewPager smoothViewPager;
     private ViewGroup bottomBarContainer;
     private AppCompatImageButton previous;
     private AppCompatImageButton next;
@@ -91,7 +92,7 @@ public class IntroductionActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             select(0);
-            pager.setCurrentItem(rtlAwarePosition(0));
+            smoothViewPager.setCurrentItem(rtlAwarePosition(0));
         } else {
             previousPagerPosition = savedInstanceState.getInt(STATE_PREVIOUS_PAGER_POSITION);
 
@@ -111,7 +112,7 @@ public class IntroductionActivity extends AppCompatActivity {
             return newInsets.isConsumed() ? newInsets.consumeSystemWindowInsets() : newInsets;
         });
 
-        ViewCompat.setOnApplyWindowInsetsListener(pager, (view, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(smoothViewPager, (view, insets) -> {
             WindowInsetsCompat newInsets = ViewCompat.onApplyWindowInsets(view, insets);
 
             if (newInsets.isConsumed()) {
@@ -124,8 +125,8 @@ public class IntroductionActivity extends AppCompatActivity {
                 consumed = true;
             }
 
-            for (int i = 0; i < pager.getChildCount(); i++) {
-                ViewCompat.dispatchApplyWindowInsets(pager.getChildAt(i), newInsets);
+            for (int i = 0; i < smoothViewPager.getChildCount(); i++) {
+                ViewCompat.dispatchApplyWindowInsets(smoothViewPager.getChildAt(i), newInsets);
 
                 if (newInsets.isConsumed()) {
                     consumed = true;
@@ -191,7 +192,7 @@ public class IntroductionActivity extends AppCompatActivity {
 
     private void findViews() {
         root = findViewById(R.id.introduction_activity_root);
-        pager = findViewById(R.id.introduction_activity_pager);
+        smoothViewPager = findViewById(R.id.introduction_activity_pager);
         indicatorContainer = findViewById(R.id.introduction_activity_container_indicator);
         bottomBarContainer = findViewById(R.id.introduction_activity_bottom_bar_container);
         skip = findViewById(R.id.introduction_activity_skip);
@@ -233,25 +234,25 @@ public class IntroductionActivity extends AppCompatActivity {
             indicatorContainer.addView(indicatorManager.init(LayoutInflater.from(this),
                     indicatorContainer, slides.size()));
 
-            indicatorManager.setListener(position -> pager.setCurrentItem(position));
+            indicatorManager.setListener(position -> smoothViewPager.setCurrentItem(position));
         }
     }
 
     private void initViews() {
         next.setOnClickListener(view -> {
-            final int currentIndex = pager.getCurrentItem();
+            final int currentIndex = smoothViewPager.getCurrentItem();
 
             if (currentIndex == rtlAwarePosition(slides.size() - 1)) {
                 handleFinish();
             } else {
-                pager.setCurrentItem(nextPosition(currentIndex), true);
+                smoothViewPager.setCurrentItem(nextPosition(currentIndex), true);
             }
         });
 
-        previous.setOnClickListener(view -> pager.setCurrentItem(previousPosition(pager.getCurrentItem()), true));
+        previous.setOnClickListener(view -> smoothViewPager.setCurrentItem(previousPosition(smoothViewPager.getCurrentItem()), true));
 
-        pager.setAdapter(new PagerAdapter(getSupportFragmentManager(), slides));
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        smoothViewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), slides));
+        smoothViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -279,7 +280,7 @@ public class IntroductionActivity extends AppCompatActivity {
         next.bringToFront();
 
         if (configuration.getPageTransformer() != null) {
-            pager.setPageTransformer(true, configuration.getPageTransformer());
+            smoothViewPager.setPageTransformer(true, configuration.getPageTransformer());
         }
 
         if (skipText != null) {
@@ -300,12 +301,12 @@ public class IntroductionActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (pager.getCurrentItem() == rtlAwarePosition(0)) {
+        if (smoothViewPager.getCurrentItem() == rtlAwarePosition(0)) {
             if (allowBackPress) {
                 handleFinishCancelled();
             }
         } else {
-            pager.setCurrentItem(previousPosition(pager.getCurrentItem()));
+            smoothViewPager.setCurrentItem(previousPosition(smoothViewPager.getCurrentItem()));
         }
     }
 
