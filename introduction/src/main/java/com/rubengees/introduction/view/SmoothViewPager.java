@@ -33,7 +33,7 @@ public class SmoothViewPager extends ViewPager {
 
 		@Override
 		public void startScroll(int startX, int startY, int dx, int dy, int duration) {
-			super.startScroll(startX, startY, dx, dy, 1000 /*1 secs*/);
+			super.startScroll(startX, startY, dx, dy, 300);
 		}
 	}
 }
