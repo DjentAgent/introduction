@@ -92,7 +92,7 @@ public class IntroductionActivity extends AppCompatActivity {
 
             if (savedInstanceState == null) {
                 select(0);
-                smoothViewPager.setCurrentItem(rtlAwarePosition(0), true);
+                runOnUiThread(() -> smoothViewPager.setCurrentItem(rtlAwarePosition(0), true));
             } else {
                 previousPagerPosition = savedInstanceState.getInt(STATE_PREVIOUS_PAGER_POSITION);
 
@@ -234,7 +234,7 @@ public class IntroductionActivity extends AppCompatActivity {
             indicatorContainer.addView(indicatorManager.init(LayoutInflater.from(this),
                     indicatorContainer, slides.size()));
 
-            indicatorManager.setListener(position -> smoothViewPager.setCurrentItem(position, true));
+            indicatorManager.setListener(position -> runOnUiThread(() -> smoothViewPager.setCurrentItem(position, true)));
         }
     }
 
@@ -245,11 +245,11 @@ public class IntroductionActivity extends AppCompatActivity {
             if (currentIndex == rtlAwarePosition(slides.size() - 1)) {
                 handleFinish();
             } else {
-                smoothViewPager.setCurrentItem(nextPosition(currentIndex), true);
+                runOnUiThread(() -> smoothViewPager.setCurrentItem(nextPosition(currentIndex), true));
             }
         });
 
-        previous.setOnClickListener(view -> smoothViewPager.setCurrentItem(previousPosition(smoothViewPager.getCurrentItem()), true));
+        previous.setOnClickListener(view -> runOnUiThread(() -> smoothViewPager.setCurrentItem(previousPosition(smoothViewPager.getCurrentItem()), true)));
 
         smoothViewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), slides));
         smoothViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -306,7 +306,7 @@ public class IntroductionActivity extends AppCompatActivity {
                 handleFinishCancelled();
             }
         } else {
-            smoothViewPager.setCurrentItem(previousPosition(smoothViewPager.getCurrentItem()), true);
+            runOnUiThread(() -> smoothViewPager.setCurrentItem(previousPosition(smoothViewPager.getCurrentItem()), true));
         }
     }
 
