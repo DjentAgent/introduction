@@ -90,10 +90,9 @@ public class IntroductionActivity extends AppCompatActivity {
         initManagers();
         initViews();
 
-        runOnUiThread(() -> {
             if (savedInstanceState == null) {
                 select(0);
-                smoothViewPager.setCurrentItem(rtlAwarePosition(0));
+                smoothViewPager.setCurrentItem(rtlAwarePosition(0), true);
             } else {
                 previousPagerPosition = savedInstanceState.getInt(STATE_PREVIOUS_PAGER_POSITION);
 
@@ -136,7 +135,6 @@ public class IntroductionActivity extends AppCompatActivity {
 
                 return consumed ? newInsets.consumeSystemWindowInsets() : newInsets;
             });
-        });
     }
 
     @Override
@@ -236,7 +234,7 @@ public class IntroductionActivity extends AppCompatActivity {
             indicatorContainer.addView(indicatorManager.init(LayoutInflater.from(this),
                     indicatorContainer, slides.size()));
 
-            indicatorManager.setListener(position -> smoothViewPager.setCurrentItem(position));
+            indicatorManager.setListener(position -> smoothViewPager.setCurrentItem(position, true));
         }
     }
 
@@ -308,7 +306,7 @@ public class IntroductionActivity extends AppCompatActivity {
                 handleFinishCancelled();
             }
         } else {
-            smoothViewPager.setCurrentItem(previousPosition(smoothViewPager.getCurrentItem()));
+            smoothViewPager.setCurrentItem(previousPosition(smoothViewPager.getCurrentItem()), true);
         }
     }
 
