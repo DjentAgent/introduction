@@ -90,50 +90,52 @@ public class IntroductionActivity extends AppCompatActivity {
         initManagers();
         initViews();
 
-        if (savedInstanceState == null) {
-            select(0);
-            smoothViewPager.setCurrentItem(rtlAwarePosition(0));
-        } else {
-            previousPagerPosition = savedInstanceState.getInt(STATE_PREVIOUS_PAGER_POSITION);
+        runOnUiThread(() -> {
+            if (savedInstanceState == null) {
+                select(0);
+                smoothViewPager.setCurrentItem(rtlAwarePosition(0));
+            } else {
+                previousPagerPosition = savedInstanceState.getInt(STATE_PREVIOUS_PAGER_POSITION);
 
-            select(previousPagerPosition);
-        }
-
-        // Workarounds for fitsSystemWindows in a ViewPager.
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
-            WindowInsetsCompat newInsets = ViewCompat.onApplyWindowInsets(root, insets);
-
-            if (newInsets.isConsumed()) {
-                return newInsets;
+                select(previousPagerPosition);
             }
 
-            ViewCompat.dispatchApplyWindowInsets(bottomBarContainer, newInsets);
+            // Workarounds for fitsSystemWindows in a ViewPager.
+            ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+                WindowInsetsCompat newInsets = ViewCompat.onApplyWindowInsets(root, insets);
 
-            return newInsets.isConsumed() ? newInsets.consumeSystemWindowInsets() : newInsets;
-        });
+                if (newInsets.isConsumed()) {
+                    return newInsets;
+                }
 
-        ViewCompat.setOnApplyWindowInsetsListener(smoothViewPager, (view, insets) -> {
-            WindowInsetsCompat newInsets = ViewCompat.onApplyWindowInsets(view, insets);
+                ViewCompat.dispatchApplyWindowInsets(bottomBarContainer, newInsets);
 
-            if (newInsets.isConsumed()) {
-                return newInsets;
-            }
+                return newInsets.isConsumed() ? newInsets.consumeSystemWindowInsets() : newInsets;
+            });
 
-            boolean consumed = false;
+            ViewCompat.setOnApplyWindowInsetsListener(smoothViewPager, (view, insets) -> {
+                WindowInsetsCompat newInsets = ViewCompat.onApplyWindowInsets(view, insets);
 
-            if (newInsets.isConsumed()) {
-                consumed = true;
-            }
+                if (newInsets.isConsumed()) {
+                    return newInsets;
+                }
 
-            for (int i = 0; i < smoothViewPager.getChildCount(); i++) {
-                ViewCompat.dispatchApplyWindowInsets(smoothViewPager.getChildAt(i), newInsets);
+                boolean consumed = false;
 
                 if (newInsets.isConsumed()) {
                     consumed = true;
                 }
-            }
 
-            return consumed ? newInsets.consumeSystemWindowInsets() : newInsets;
+                for (int i = 0; i < smoothViewPager.getChildCount(); i++) {
+                    ViewCompat.dispatchApplyWindowInsets(smoothViewPager.getChildAt(i), newInsets);
+
+                    if (newInsets.isConsumed()) {
+                        consumed = true;
+                    }
+                }
+
+                return consumed ? newInsets.consumeSystemWindowInsets() : newInsets;
+            });
         });
     }
 
