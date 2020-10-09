@@ -14,6 +14,7 @@
         android:layout_marginRight="16dp"
         android:layout_weight="15"
         android:gravity="center"
+        android:scaleType="fitCenter"
         tools:ignore="ContentDescription"
         tools:src="@tools:sample/backgrounds/scenic" />
 
